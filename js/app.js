@@ -26,11 +26,9 @@ function init() {
         //2)loop over unique cities array
         listOfCities.map(addOption);
 
-        
         function addOption(city){
             let option = `<option value="${city}"></option>` 
             datalist.innerHTML += option;
-           
         }
 
         //  2.1)Inside Loop:
@@ -56,6 +54,18 @@ function init() {
         showOptions(uniqueCities);
 
     
+    }
+
+    let citiesInput = document.querySelector("#inputcities");
+
+    citiesInput.addEventListener("keydown",handleCityInput);
+    
+    function handleCityInput(e){
+        if(e.keyCode === 13){
+           console.log("Get hotels from city..");
+           let selectedCity = this.value;
+           console.log(selectedCity);
+        }
     }
 
     $.ajax(options);
