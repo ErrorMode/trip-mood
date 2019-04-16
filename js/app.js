@@ -1,6 +1,5 @@
 jQuery(document).ready(init);
 
-
 //Same as: jQuery(document).ready(init);
 
 //Our application goes here:
@@ -9,6 +8,7 @@ function init() {
         url: "data.json",
         success: jsonHandler
     }
+    let entries;
 
     function removeDups(names) {
         let unique = {};
@@ -18,7 +18,7 @@ function init() {
         return Object.keys(unique);
     }
 
-    function showOptions(listOfCities){
+    function showOptions(listOfCities) {
         //1)get datalist
         let datalist = document.querySelector("#cities");
         console.log(datalist); //Testing
@@ -26,8 +26,8 @@ function init() {
         //2)loop over unique cities array
         listOfCities.map(addOption);
 
-        function addOption(city){
-            let option = `<option value="${city}"></option>` 
+        function addOption(city) {
+            let option = `<option value="${city}"></option>`
             datalist.innerHTML += option;
         }
 
@@ -44,29 +44,47 @@ function init() {
             //console.log(hotel.city);
         }
 
-        let entries = data[1].entries;
+        entries = data[1].entries;
         let cities = entries.map(getCity);
         let uniqueCities = removeDups(cities);
 
         //console.log(entries); //Array [ {HOTEL} x 4 ]
 
-       // console.log(uniqueCities);
+        // console.log(uniqueCities);
         showOptions(uniqueCities);
-
-    
     }
+
+    function getHotelsFromSelected(selectedCity) {
+        console.log(entries, selectedCity);
+    }
+
+    function handleCityInput(e) {
+        if (e.keyCode === 13) {
+            let selectedCity = this.value;
+            //    console.log(entries);
+            //    console.log("Selected City : ",selectedCity);
+            getHotelsFromSelected(selectedCity);
+
+        }
+    }
+    function getHotelsFromSelected(selectedCity) {
+        console.log(entries, selectedCity);
+
+        function isHotelinCity(hotel) {
+            return hotel.city.toLowerCase() === selectedCity.toLowerCase().trim();
+        }
+        let availableHotels = entries.filter(isHotelinCity);
+        console.log(availableHotels);
+        return availableHotels;
+
+    }
+
+
 
     let citiesInput = document.querySelector("#inputcities");
 
-    citiesInput.addEventListener("keydown",handleCityInput);
-    
-    function handleCityInput(e){
-        if(e.keyCode === 13){
-           console.log("Get hotels from city..");
-           let selectedCity = this.value;
-           console.log(selectedCity);
-        }
-    }
+    citiesInput.addEventListener("keydown", handleCityInput);
+
 
     $.ajax(options);
 }
